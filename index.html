@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EmojiChat 💬</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- PANTALLA: Elegir nombre -->
+  <div id="screen-join" class="screen active">
+    <div class="join-card">
+      <div class="join-logo">💬</div>
+      <h1>EmojiChat</h1>
+      <p class="join-sub">Solo emojis. Nada más.</p>
+      <div class="join-form">
+        <label for="username-input">Tu nombre</label>
+        <input id="username-input" type="text" placeholder="Ej: Michi, Zorro…" maxlength="20" autocomplete="off" />
+        <div class="avatar-pick">
+          <span class="avatar-label">Tu avatar</span>
+          <div class="avatar-options" id="avatar-options"></div>
+        </div>
+        <button id="join-btn" class="btn-primary" disabled>Entrar al chat</button>
+      </div>
+      <p class="join-hint">⚙️ Necesitás configurar Supabase — <a href="#" id="open-setup">ver guía</a></p>
+    </div>
+  </div>
+
+  <!-- PANTALLA: Setup Supabase -->
+  <div id="screen-setup" class="screen">
+    <div class="setup-card">
+      <button class="back-btn" id="back-from-setup">← Volver</button>
+      <h2>Configurar Supabase</h2>
+      <ol class="setup-steps">
+        <li>
+          <strong>Crear proyecto gratis</strong>
+          <p>Entrá a <a href="https://supabase.com" target="_blank">supabase.com</a> y creá un proyecto nuevo.</p>
+        </li>
+        <li>
+          <strong>Crear la tabla de mensajes</strong>
+          <p>En el SQL Editor de Supabase, pegá y ejecutá esto:</p>
+          <pre><code>create table messages (
+  id uuid default gen_random_uuid() primary key,
+  username text not null,
+  avatar text not null,
+  emojis text not null,
+  created_at timestamptz default now()
+);
+
+alter table messages enable row level security;
+
+create policy "Anyone can read"
+  on messages for select using (true);
+
+create policy "Anyone can insert"
+  on messages for insert with check (true);</code></pre>
+        </li>
+        <li>
+          <strong>Copiar tus credenciales</strong>
+          <p>En <em>Project Settings → API</em>, copiá la <strong>URL</strong> y la <strong>anon key</strong>.</p>
+        </li>
+        <li>
+          <strong>Pegá tus credenciales acá abajo</strong>
+          <div class="cred-form">
+            <input id="sb-url" type="text" placeholder="https://xxxx.supabase.co" />
+            <input id="sb-key" type="text" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+            <button id="save-creds" class="btn-primary">Guardar y conectar</button>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- PANTALLA: Chat -->
+  <div id="screen-chat" class="screen">
+    <header class="chat-header">
+      <div class="chat-header-left">
+        <span class="chat-logo">💬</span>
+        <div>
+          <div class="chat-title">EmojiChat</div>
+          <div class="chat-status" id="chat-status">Conectando…</div>
+        </div>
+      </div>
+      <div class="online-badge" id="online-badge">
+        <span class="dot"></span><span id="online-count">0 en línea</span>
+      </div>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="messages-empty" id="messages-empty">
+        <span>✨</span><p>Sé el primero en escribir algo</p>
+      </div>
+    </div>
+
+    <div class="composer">
+      <div class="cat-tabs" id="cat-tabs"></div>
+      <div class="emoji-grid" id="emoji-grid"></div>
+      <div class="send-bar">
+        <div class="preview-wrap">
+          <div class="preview" id="preview" data-empty="true"></div>
+        </div>
+        <button class="del-btn" id="del-btn" aria-label="Borrar último emoji">⌫</button>
+        <button class="send-btn" id="send-btn" disabled aria-label="Enviar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
