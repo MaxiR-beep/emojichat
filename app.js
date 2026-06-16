@@ -24,8 +24,8 @@ let onlineUsers = new Set();
 // ── Credenciales (guardadas en localStorage) ─────────────────────────────────
 function getCreds() {
   return {
-    url: localStorage.getItem('sb_url') || '',
-    key: localStorage.getItem('sb_key') || '',
+    url: 'https://rraehjyhrofsxxucyfyy.supabase.co',
+    key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyYWVoanlocm9mc3h4dWN5Znl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzM5OTcsImV4cCI6MjA5NzIwOTk5N30.A8uJmoIDleZNxCqKAR96hZEpr4zs_2bZqsB_M5dBOmo',
   };
 }
 function saveCreds(url, key) {
